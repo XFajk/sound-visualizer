@@ -1,0 +1,25 @@
+[project]
+name = "sound-visualizer"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Rudolf Vrbensky",email = "89221002+XFajk@users.noreply.github.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pygame-ce (>=2.5.3,<3.0.0)",
+    "numpy (>=2.2.4,<3.0.0)",
+    "pyopengl (>=3.1.9,<4.0.0)",
+    "pyopengl-accelerate (>=3.1.9,<4.0.0)",
+    "pyglm (>=2.8.2,<3.0.0)"
+]
+
+[tool.poetry]
+package-mode = false
+packages = [{include = "sound_visualizer", from = "src"}]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
