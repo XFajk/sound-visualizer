@@ -1,12 +1,12 @@
 from OpenGL.GL import *
 from pyglm import glm
 
-from shader import ShaderProgram
+from resources.shader import get_object_shader 
 from resources.mesh import Mesh
 from resources.texture import Texture
 
 
-class MeshObject3D:
+class MeshObject:
     def __init__(
         self,
         mesh: Mesh,
@@ -14,8 +14,9 @@ class MeshObject3D:
         position: glm.vec3,
         rotation: glm.vec3,
         scale: glm.vec3,
-        shader: ShaderProgram,
     ) -> None:
+        
+        self._shader = get_object_shader()
         self._model_transform = (
             glm.translate(position)
             @ glm.rotate(glm.radians(rotation.z), glm.vec3(0.0, 0.0, 1.0))
@@ -23,7 +24,7 @@ class MeshObject3D:
             @ glm.rotate(glm.radians(rotation.x), glm.vec3(1.0, 0.0, 0.0))
             @ glm.scale(scale)
         )
-        self._model_transform_location = shader.model_location
+        self._model_transform_location = self._shader.uniform_locations["model"]
 
         self._mesh = mesh
         self._texture = texture
@@ -33,6 +34,7 @@ class MeshObject3D:
         self.scale = scale
     
     def draw(self) -> None:
+        self._shader.use()
         self._texture.use(GL_TEXTURE0)
         
         self._model_transform = (

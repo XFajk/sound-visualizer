@@ -104,7 +104,7 @@ class Mesh:
             scale_transform = glm.scale(glm.vec3(w, h, d))
 
             vertex_data, index_data = get_transformed_face_data(
-                rotation_transform @ scale_transform, rotation_transform, 4 * i
+                scale_transform @ rotation_transform, rotation_transform, 4 * i
             )
 
             vertices.extend(vertex_data) 
@@ -117,7 +117,7 @@ class Mesh:
             scale_transform = glm.scale(glm.vec3(w, h, d))
 
             vertex_data, index_data = get_transformed_face_data(
-                rotation_transform @ scale_transform, rotation_transform, 4 * (i + 4)
+                scale_transform @ rotation_transform, rotation_transform, 4 * (i + 4)
             )
 
             vertices.extend(vertex_data) 

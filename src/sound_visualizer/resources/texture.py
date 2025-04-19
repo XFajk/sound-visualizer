@@ -1,13 +1,10 @@
 import pygame
 from OpenGL.GL import *
 
-
 class Texture:
-    def __init__(self, file_path: str) -> None:
+    def __init__(self, image: pygame.Surface) -> None:
         self._texture_id = glGenTextures(1)
-
-        image = pygame.image.load(file_path).convert()
-        self._width, self._height = image.get_width(), image.get_height()
+        self.width, self.height = image.get_size()
         
         image_data = pygame.image.tobytes(image, "RGB", True)    
     
@@ -23,8 +20,8 @@ class Texture:
             GL_TEXTURE_2D,
             0,
             GL_RGB,
-            self._width,
-            self._height,
+            self.width,
+            self.height,
             0,
             GL_RGB,
             GL_UNSIGNED_BYTE,
@@ -41,3 +38,17 @@ class Texture:
         
     def __del__(self) -> None:
         glDeleteTextures(1, [self._texture_id])
+        
+        
+    @classmethod
+    def from_file(cls, file_path: str) -> "Texture":
+        image = pygame.image.load(file_path).convert()
+        texture = cls(image)
+        return texture
+    
+    @classmethod
+    def from_color(cls, color: pygame.Color) -> "Texture":
+        image = pygame.Surface((1, 1))
+        image.fill(color)
+        texture = cls(image)
+        return texture
