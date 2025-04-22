@@ -50,7 +50,7 @@ class Mesh:
 
     @staticmethod
     def generate_cube_data(
-        w: float, h: float, d: float
+        w: float, h: float, d: float, data_mask: tuple[int, ...] = (1, 1, 1, 1, 1, 1, 1, 1)
     ) -> tuple[list[float], list[int]]:
         vertices: list[float] = []
         indices: list[int] = []
@@ -93,7 +93,12 @@ class Mesh:
                     face_tex_coords[i].x,
                     face_tex_coords[i].y,
                 ]
-                face_data.extend(vertex)
+                true_vertex = []
+                for i in range(len(vertex)):
+                    if data_mask[i]: 
+                        true_vertex.append(vertex[i])
+                        
+                face_data.extend(true_vertex)
 
             return face_data, index_data
 

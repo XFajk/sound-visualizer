@@ -6,7 +6,10 @@ import sys
 
 from systems.time import TIME
 
-from resources.shader import init_default_shaders, assign_new_projection_to_default_shaders
+from resources.shader import (
+    init_default_shaders,
+    assign_new_projection_to_default_shaders,
+)
 
 from objects.mesh_object import MeshObject
 from objects.light_object import LightObject
@@ -35,7 +38,7 @@ def main() -> None:
     glEnable(GL_DEPTH_TEST)
     glClearColor(0.1, 0.1, 0.1, 1.0)
     glViewport(0, 0, window.get_width(), window.get_height())
-    
+
     init_default_shaders()
 
     assign_new_projection_to_default_shaders(
@@ -62,19 +65,20 @@ def main() -> None:
         pygame.Color.from_normalized(1.0, 1.0, 1.0, 1.0),
     )
 
-
     running = True
     while running:
 
         TIME.update()
-        
+
         camera.update()
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+        light.position.x += glm.cos(TIME.time) * 5 * TIME.delta_time
+        light.position.z -= glm.sin(TIME.time) * 5 * TIME.delta_time
         light.draw()
 
-        mesh_object.rotation.x += 90.0 * TIME.delta_time
+        mesh_object.rotation.x = 90.0
         mesh_object.draw()
 
         pygame.display.flip()
@@ -89,7 +93,7 @@ def main() -> None:
                     glm.perspective(45.0, event.w / event.h, 0.01, 100.0)
                 )
         pygame.display.set_caption(f"FPS: {int(clock.get_fps())}")
-        clock.tick(60)
+        clock.tick(120)
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@ from OpenGL.GL import *
 from OpenGL.GL.shaders import compileShader
 from pyglm import glm
 
+from systems.time import TIME
+
 class ShaderProgram:
     def __init__(self, vertex_shader_path: str, fragment_shader_path: str, uniforms: list[str] = [], texture_units: int = 0) -> None:
         with open(vertex_shader_path) as vertex_file:
@@ -40,11 +42,10 @@ class ShaderProgram:
             if not self.uniform_locations[f"texture{i}"] == -1:
                 glUniform1i(self.uniform_locations[f"texture{i}"], i)
 
-        self._TIME = 0.0
-        
 
     def use(self) -> None:
         glUseProgram(self.program)  
+        glUniform1f(self._TIME_location, TIME.time)
 
         
     def __del__(self) -> None:
@@ -56,8 +57,9 @@ _LIGHT_SHADER = None
 
 def init_default_shaders() -> None:
     global _OBJECT_SHADER, _LIGHT_SHADER
-    _OBJECT_SHADER = ShaderProgram("./shaders/object/vertex.glsl", "./shaders/object/fragment.glsl", ["projection", "view", "model", "light_color"], 1)
+    _OBJECT_SHADER = ShaderProgram("./shaders/object/vertex.glsl", "./shaders/object/fragment.glsl", ["projection", "view", "model", "normal_matrix", "light_color", "light_pos"], 1)
     _LIGHT_SHADER = ShaderProgram("./shaders/light/vertex.glsl", "./shaders/light/fragment.glsl", ["projection", "view", "model", "light_color"])
+
     
 def get_object_shader() -> ShaderProgram:
     global _OBJECT_SHADER
