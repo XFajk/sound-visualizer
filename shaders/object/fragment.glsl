@@ -7,8 +7,10 @@ in vec3 v_pos;
 out vec4 out_color;
 
 uniform sampler2D texture1;
+
 uniform vec4 light_color;
 uniform vec3 light_pos;
+uniform vec3 view_pos;
 
 float ambient_strength = 0.1;
 vec4 ambient = light_color * ambient_strength;

@@ -16,6 +16,6 @@ uniform mat3 normal_matrix;
 void main() {
     gl_Position = projection * view * model * vec4(a_pos, 1.0);
     v_pos = vec3(model * vec4(a_pos, 1.0));
-    v_normal = mat3(transpose(inverse(model))) * a_normal; // Correct normal transformation
+    v_normal = normal_matrix * a_normal; // Correct normal transformation
     v_tex_cord = a_tex_cord;
 }
