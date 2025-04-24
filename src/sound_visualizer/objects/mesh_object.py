@@ -1,6 +1,8 @@
 from OpenGL.GL import *
 from pyglm import glm
 
+from systems.render_context import RENDER_CONTEXT
+
 from resources.shader import get_object_shader 
 from resources.mesh import Mesh
 from resources.texture import Texture
@@ -24,7 +26,7 @@ class MeshObject:
             @ glm.rotate(glm.radians(rotation.x), glm.vec3(1.0, 0.0, 0.0))
             @ glm.scale(scale)
         )
-        self._normal_transform = glm.mat3(glm.transpose(glm.inverse(self._model_transform))) 
+        self._normal_transform = glm.mat3(glm.transpose(glm.inverse(RENDER_CONTEXT.view_transfrom * self._model_transform))) 
         self._model_transform_location = self._shader.uniform_locations["model"]
         self._normal_transform_location = self._shader.uniform_locations["normal_matrix"]
 
@@ -46,8 +48,8 @@ class MeshObject:
             @ glm.rotate(glm.radians(self.rotation.x), glm.vec3(1.0, 0.0, 0.0))
             @ glm.scale(self.scale)
         )
-        self._normal_transform = glm.mat3(glm.transpose(glm.inverse(self._model_transform)))
-    
+        self._normal_transform = glm.mat3(glm.transpose(glm.inverse(RENDER_CONTEXT.view_transform @ self._model_transform)))
+
         glUniformMatrix4fv(self._model_transform_location, 1, GL_FALSE, glm.value_ptr(self._model_transform))
         glUniformMatrix3fv(self._normal_transform_location, 1, GL_FALSE, glm.value_ptr(self._normal_transform))
         

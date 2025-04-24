@@ -5,6 +5,7 @@ import os
 import sys
 
 from systems.time import TIME
+from systems.render_context import RENDER_CONTEXT
 
 from resources.shader import (
     init_default_shaders,
@@ -41,8 +42,9 @@ def main() -> None:
 
     init_default_shaders()
 
+    RENDER_CONTEXT.projection_transform = glm.perspective(45.0, 800 / 600, 0.01, 100.0)
     assign_new_projection_to_default_shaders(
-        glm.perspective(45.0, 800 / 600, 0.01, 100.0)
+        RENDER_CONTEXT.projection_transform
     )
 
     camera = DebugCamera(
@@ -52,7 +54,7 @@ def main() -> None:
 
     mesh_object = MeshObject(
         Mesh(*Mesh.generate_cube_data(2.0, 3.0, 1.0)),
-        Texture.from_file("./assets/crate.jpg"),
+        Texture.from_color(pygame.Color.from_normalized(0.3, 0.5, 0.1, 1.0)),
         glm.vec3(0.0, 0.0, -5.0),
         glm.vec3(0.0, 0.0, 0.0),
         glm.vec3(1.0, 1.0, 1.0),
@@ -78,9 +80,9 @@ def main() -> None:
         light.position.z -= glm.sin(TIME.time) * 5 * TIME.delta_time
         light.draw()
 
-        mesh_object.rotation.x = 90.0
+        mesh_object.rotation.x += 90.0 * TIME.delta_time
         mesh_object.draw()
-
+        
         pygame.display.flip()
 
         for event in pygame.event.get():
@@ -89,8 +91,9 @@ def main() -> None:
 
             if event.type == pygame.VIDEORESIZE:
                 glViewport(0, 0, event.w, event.h)
+                RENDER_CONTEXT.projection_transform = glm.perspective(45.0, 800 / 600, 0.01, 100.0)
                 assign_new_projection_to_default_shaders(
-                    glm.perspective(45.0, event.w / event.h, 0.01, 100.0)
+                    RENDER_CONTEXT.projection_transform
                 )
         pygame.display.set_caption(f"FPS: {int(clock.get_fps())}")
         clock.tick(120)

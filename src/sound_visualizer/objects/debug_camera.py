@@ -4,6 +4,7 @@ from pyglm import glm
 
 from resources.shader import assign_new_view_to_default_shaders
 from systems.time import TIME
+from systems.render_context import RENDER_CONTEXT
 
 SPEED = 5.0
 SUPER_SPEED = 10.0
@@ -30,7 +31,7 @@ class DebugCamera:
             self.position + self._front,
             glm.vec3(0.0, 1.0, 0.0),
         )
-        
+        RENDER_CONTEXT.view_transform = view_transform
         assign_new_view_to_default_shaders(view_transform)
 
     
